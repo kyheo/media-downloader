@@ -31,3 +31,14 @@ a environment starter script (yeah, me so lazy)
 
 If you want to install the requirements packages with other procedure, the list
 is in *doc/requirements.txt*.
+
+
+Runing the Application
+++++++++++++++++++++++
+
+Right now it only can be ran from a console. Help should be shown if its run
+with **-h** parameter.
+
+::
+
+    $ bin/media_downloader

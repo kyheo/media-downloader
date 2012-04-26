@@ -1,0 +1,46 @@
+#! /usr/bin/env python
+
+import sys
+import os
+import argparse
+import logging
+
+
+def _set_path():
+    '''Set application path. 
+    
+       Right now it just set the path to where the script gets called, and it
+       could fail, later on installation paths should be set in here.
+    '''
+    # @TODO This path should be handled properly on installation.
+    APP_PATH = os.path.abspath(os.path.dirname(os.path.dirname(os.path.realpath(sys.argv[0]))))
+    sys.path.insert(0, APP_PATH)
+
+
+def _parse_args():
+    '''Define and parse parameters. Returns configuration module'''
+    parser = argparse.ArgumentParser(description='Media Downloaders.')
+    parser.add_argument('-c', '--config', dest='config_file',
+        help='Configuration file.', default='config.py')
+
+    args = parser.parse_args()
+    module = os.path.splitext(os.path.basename(args.config_file))[0]
+    return  __import__(module)
+
+
+def run():
+    '''Fire starter :P'''
+    _set_path()
+    config = _parse_args()
+   
+    logging.basicConfig(level=config.LOGGING['level'],
+                        format=config.LOGGING['format'], 
+                        datefmt=config.LOGGING['datefmt'],
+                        )
+ 
+    from media_downloader import main
+    main.main(config)
+    
+
+if __name__ == '__main__':
+    run()

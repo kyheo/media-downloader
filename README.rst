@@ -11,7 +11,23 @@ A source is any service, library or application that could return a link to a
 downloadable media file.
 
 A destination is any application, library or service that will actually download
-an application.
+the media file.
 
 .. [#] I know, I know, subtitles are not media files.
 .. [#] This make the project name even worst, right ?
+
+Development
++++++++++++
+
+There is a script to create the development environment, it optionally receives
+the environment directory path.
+
+::
+
+    $ ./create_env.sh dev_env
+
+This will create the environment directory, add it to *.gitignore* file and create
+a environment starter script (yeah, me so lazy)
+
+If you want to install the requirements packages with other procedure, the list
+is in *doc/requirements.txt*.

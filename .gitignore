@@ -1,1 +1,3 @@
 *.pyc
+dev_env
+start_env.sh

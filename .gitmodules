@@ -1,3 +1,0 @@
-[submodule "external_libs/pidlock"]
-	path = external_libs/pidlock
-	url = git://github.com/kyheo/pidlock.git

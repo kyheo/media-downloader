@@ -32,6 +32,7 @@ a environment starter script (yeah, me so lazy)
 If you want to install the requirements packages with other procedure, the list
 is in *doc/requirements.txt*.
 
+Installations from vcs repos must use -e flag with the urls and #egg=PACKAGE
 
 Runing the Application
 ++++++++++++++++++++++

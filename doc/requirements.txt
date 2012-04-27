@@ -1,3 +1,5 @@
 ipdb
 ipython
 feedparser
+-e git://github.com/kyheo/pidlock.git#egg=pidlock
+periscope

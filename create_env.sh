@@ -18,6 +18,8 @@ fi
 echo "- Creating new $ENV environment."
 virtualenv $ENV
 source $ENV/bin/activate
+echo "- Installing BeautifulSoup required to install Periscope (yes)."
+pip install BeautifulSoup
 echo "- Installing required packages from requirements file ($REQ_FILE)."
 pip install -r $REQ_FILE
 deactivate

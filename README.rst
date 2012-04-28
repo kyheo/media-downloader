@@ -13,9 +13,6 @@ downloadable media file.
 A destination is any application, library or service that will actually download
 the media file.
 
-.. [#] I know, I know, subtitles are not media files.
-.. [#] This make the project name even worst, right ?
-
 Development
 +++++++++++
 
@@ -43,3 +40,8 @@ with **-h** parameter.
 ::
 
     $ bin/media_downloader
+
+
+.. [#] I know, I know, subtitles are not media files.
+.. [#] This make the project name even worst, right ?
+

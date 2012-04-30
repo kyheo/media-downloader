@@ -3,7 +3,6 @@ import logging
 
 from media_downloader import source
 from media_downloader import handler
-from media_downloader import content_type
 
 LOGGING = {'level': logging.DEBUG,
            'format': '%(asctime)s - %(levelname)8s - %(filename)s:%(lineno)s - %(message)s',
@@ -18,14 +17,14 @@ SOURCES = [{'name': source.Argenteam.__name__,
         ]
 
 HANDLERS = {
-    content_type.TYPE['magnet']: [
+    'argenteam-magnet': [
             {'name': 'BitTorrent - Magnet',
              'handler': handler.system_command,
              'command': '/usr/bin/transmission-remote -a "{link}"',
              'fields': ['link'],
             },
         ],
-    content_type.TYPE['torrent']: [
+    'argenteam-torrent': [
             {'name': 'BitTorrent - Torrent',
              'handler': handler.download_file,
              'dst_file': '/Users/kyheo/dev/tmp/{name}.torrent',

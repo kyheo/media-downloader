@@ -2,7 +2,13 @@ import urllib2
 import re
 import feedparser
 import logging
-from media_downloader import content_type
+
+def create_content(type_, name, link, extra=None):
+    '''Create content dictionary'''
+    return {'type': type_,
+            'name': name,
+            'link': link,
+            'extra': extra}
 
 def fetch_content(configs):
     '''Fetch content from sources'''
@@ -68,7 +74,7 @@ class Argenteam(Base):
 
     def _create_content_type(self, entry):
         if entry['link'].startswith('magnet'):
-            type_ = content_type.TYPE['magnet']
+            type_ = 'argenteam-magnet'
         else:
-            type_ = content_type.TYPE['torrent']
-        return content_type.create(type_, entry['title'], entry['link'])
+            type_ = 'argenteam-torrent'
+        return create_content(type_, entry['title'], entry['link'])

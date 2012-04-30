@@ -71,4 +71,4 @@ class Argenteam(Base):
             type_ = content_type.TYPE['magnet']
         else:
             type_ = content_type.TYPE['torrent']
-        return content_type.ContentType(type_, entry['title'], entry['link'])
+        return content_type.create(type_, entry['title'], entry['link'])

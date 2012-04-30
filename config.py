@@ -9,8 +9,8 @@ LOGGING = {'level': logging.DEBUG,
            'datefmt': '%Y-%m-%d %H:%M:%S', 
         }
 
-SOURCES = [{'name': source.Argenteam.__name__,
-            'class': source.Argenteam,
+SOURCES = [{'name': 'Argenteam',
+            'handler': source.argenteam,
             'url': 'http://www.argenteam.net/rss/tvseries_torrents.xml',
             'filters': ['House\.', 'BigBangTheory', 'HowIMetYourMother']
            }

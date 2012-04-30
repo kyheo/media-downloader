@@ -3,6 +3,7 @@ import re
 import feedparser
 import logging
 
+
 def create_content(type_, name, link, extra=None):
     '''Create content dictionary'''
     return {'type': type_,
@@ -10,37 +11,19 @@ def create_content(type_, name, link, extra=None):
             'link': link,
             'extra': extra}
 
+
 def fetch_content(configs):
     '''Fetch content from sources'''
     content = []
     for config in configs:
         logging.info('Fetching from %s', config['name'])
-        source = config['class'](config)
-        content += source.fetch_content()
+        content += config['handler'](config)
     return content
 
 
-# Classes
-class SourceConfigurationError(Exception):
-    pass
-
-class Base(object):
-    
-    SourceConfigurationError = SourceConfigurationError
-
-    def __init__(self, config):
-        self.config = config
-        self.check_configuration()
-
-    def check_configuration(self):
-        raise NotImplementedError('Must override.')
-
-    def fetch_content(self):
-        raise NotImplementedError('Must override.')
-
-
-class Argenteam(Base):
+def argenteam(config):
     ''' Argenteam RSS feed parser
+    Returned Types: argenteam-magnet and argenteam-torrent
 
     Configuration:
     {'name': 'Argenteam',
@@ -48,33 +31,24 @@ class Argenteam(Base):
      'filters': ['House\.', 'BigBangTheory', 'HowIMetYourMother']
     }
     '''
-
-    def check_configuration(self):
-        if 'url' not in self.config:
-            raise self.SourceConfigurationError('Missing rss url in configuration.')
-        if 'filters' not in self.config:
-            raise self.SourceConfigurationError('Missing filters list in configuration.')
-
-    def fetch_content(self):
-        filtered = []
-        raw_content = feedparser.parse(urllib2.urlopen(self.config['url']).read())
-        if not raw_content['entries']:
-            logging.info(raw_content['feed'])
-        else:
-            # @TODO Improve this 3 for's
-            filters = []
-            for f in self.config['filters']:
-                filters.append(re.compile(f))
-            for entry in raw_content['entries']:
-                for f in filters:
-                    if f.match(entry['title']):
-                        filtered.append(self._create_content_type(entry))
-                        break
-        return filtered
-
-    def _create_content_type(self, entry):
-        if entry['link'].startswith('magnet'):
-            type_ = 'argenteam-magnet'
-        else:
-            type_ = 'argenteam-torrent'
-        return create_content(type_, entry['title'], entry['link'])
+    filtered = []
+    raw_content = feedparser.parse(urllib2.urlopen(config['url']).read())
+    if not raw_content['entries']:
+        logging.info(raw_content['feed'])
+    else:
+        # @TODO Improve this 3 for's
+        filters = []
+        for f in config['filters']:
+            filters.append(re.compile(f))
+        for entry in raw_content['entries']:
+            for f in filters:
+                if f.match(entry['title']):
+                    if entry['link'].startswith('magnet'):
+                        type_ = 'argenteam-magnet'
+                    else:
+                        type_ = 'argenteam-torrent'
+                    tmp_content = create_content(type_, entry['title'],
+                        entry['link'])
+                    filtered.append(tmp_content)
+                    break
+    return filtered

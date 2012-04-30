@@ -5,7 +5,6 @@ import os
 import argparse
 import logging
 
-
 def _set_path():
     '''Set application path. 
     
@@ -37,9 +36,16 @@ def run():
                         format=config.LOGGING['format'], 
                         datefmt=config.LOGGING['datefmt'],
                         )
- 
-    from media_downloader import main
-    main.main(config)
+    
+    logging.info('Start')
+    try:
+        from media_downloader import source, handler
+        for content in source.fetch_content(config.SOURCES):
+            handler.handle(config.HANDLERS, content)
+    except Exception, e:
+        logging.exception(e)
+        return
+    logging.info('End')
     
 
 if __name__ == '__main__':

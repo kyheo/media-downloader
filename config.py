@@ -1,12 +1,17 @@
 # Configuration directives goes in here
 import logging
 
+from media_downloader import source
+from media_downloader import handler
+from media_downloader import content_type
+
 LOGGING = {'level': logging.DEBUG,
            'format': '%(asctime)s - %(levelname)8s - %(filename)s:%(lineno)s - %(message)s',
            'datefmt': '%Y-%m-%d %H:%M:%S', 
         }
 
-SOURCES = [{'name': 'Argenteam',
+SOURCES = [{'name': source.Argenteam.__name__,
+            'class': source.Argenteam,
             'url': 'http://www.argenteam.net/rss/tvseries_torrents.xml',
             'filters': ['House\.', 'BigBangTheory', 'HowIMetYourMother']
            }

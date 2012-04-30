@@ -4,30 +4,20 @@ import feedparser
 import logging
 from media_downloader import content_type
 
-class InvalidSourceError(Exception):
-    pass
+def fetch_content(configs):
+    '''Fetch content from sources'''
+    content = []
+    for config in configs:
+        logging.info('Fetching from %s', config['name'])
+        source = config['class'](config)
+        content += source.fetch_content()
+    return content
 
+
+# Classes
 class SourceConfigurationError(Exception):
     pass
 
-class Manager(object):
-    '''Manages sources configuration and launches content fetching'''
-
-    def __init__(self, config):
-        self.config = config
-        self.sources = {'Argenteam': Argenteam}
-
-    def fetch_content(self):
-        content = []
-        for config in self.config:
-            if config['name'] not in self.sources:
-                raise InvalidSourceError('Invalid %s source.' % (config['name'],))
-            source = self.sources[config['name']](config)
-            content += source.fetch_content() 
-        return content
-
-
-# Source classes
 class Base(object):
     
     SourceConfigurationError = SourceConfigurationError
@@ -74,7 +64,6 @@ class Argenteam(Base):
                     if f.match(entry['title']):
                         filtered.append(self._create_content_type(entry))
                         break
-            logging.debug(filtered)
         return filtered
 
     def _create_content_type(self, entry):

@@ -11,3 +11,20 @@ SOURCES = [{'name': 'Argenteam',
             'filters': ['House\.', 'BigBangTheory', 'HowIMetYourMother']
            }
         ]
+
+HANDLERS = {
+    content_type.TYPE['magnet']: [
+            {'name': 'BitTorrent - Magnet',
+             'handler': handler.system_command,
+             'command': '/usr/bin/transmission-remote -a "{link}"',
+             'fields': ['link'],
+            },
+        ],
+    content_type.TYPE['torrent']: [
+            {'name': 'BitTorrent - Torrent',
+             'handler': handler.download_file,
+             'dst_file': '/Users/kyheo/dev/tmp/{name}.torrent',
+             'dst_fields': ['name'],
+             },
+        ],
+    }

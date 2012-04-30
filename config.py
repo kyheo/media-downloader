@@ -16,19 +16,31 @@ SOURCES = [{'name': 'Argenteam',
            }
         ]
 
+# Common handlers
+avoid_duplicated = {'name': 'Avoid Duplicated downloads',
+                    'handler': handler.avoid_duplicated}
+
+store_link = {'name': 'Store link',
+              'handler': handler.store_link}
+
+# MAIN HANDLERS CONFIG
 HANDLERS = {
     'argenteam-magnet': [
+            avoid_duplicated,
             {'name': 'BitTorrent - Magnet',
              'handler': handler.system_command,
              'command': '/usr/bin/transmission-remote -a "{link}"',
              'fields': ['link'],
             },
+            store_link,
         ],
     'argenteam-torrent': [
+            avoid_duplicated,
             {'name': 'BitTorrent - Torrent',
              'handler': handler.download_file,
              'dst_file': '/Users/kyheo/dev/tmp/{name}.torrent',
              'dst_fields': ['name'],
-             },
+            },
+            store_link,
         ],
     }

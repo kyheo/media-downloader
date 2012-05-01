@@ -1,7 +1,7 @@
 Media Downloader
 ================
 
-Movies, Series, Music, Subtitles [#]_ , etc [#]_ downloader ... 
+Movies, Series, Music, Subtitles [1]_ , etc [2]_ downloader ... 
 
 The main idea is to group two projects that I currently have, a rss bit
 transmission feeder and a subtitle downloader, and also to allow the inclusion

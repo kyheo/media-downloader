@@ -41,7 +41,10 @@ def run():
     try:
         from media_downloader import source, handler
         for content in source.fetch_content(config.SOURCES):
-            handler.handle(config.HANDLERS, content)
+            try:
+                handler.handle(config.HANDLERS, content)
+            except Exception, e:
+                logging.error(e)
     except Exception, e:
         logging.exception(e)
         return

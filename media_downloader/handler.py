@@ -8,8 +8,7 @@ _DB = sqlite3.connect('.database')
 def handle(configs, content):
     '''Handle content properly'''
     for config in configs[content['type']]:
-        if not config['handler'](config, content):
-            return
+        content = config['handler'](config, content)
 
 
 def _format_parameters(content, fields):
@@ -27,10 +26,9 @@ def avoid_duplicated(config, content):
     c.execute('SELECT count(*) as total FROM files WHERE link = :link',
         {'link': content['link']})
     res = c.fetchone()
-    if res[0] == 0:
-        return True
-    logging.info('Duplicated')
-    return False
+    if res[0] > 0:
+        raise Exception('Duplicated content file.')
+    return content 
 
 
 def store_link(config, content):
@@ -40,7 +38,7 @@ def store_link(config, content):
     c.execute('INSERT INTO files (link) VALUES (:link)',
         {'link': content['link']})
     _DB.commit()
-    return True
+    return content 
 
 
 def system_command(config, content):
@@ -49,7 +47,7 @@ def system_command(config, content):
     cmd = config['command'].format(**kwargs)
     logging.info('Running %s', cmd)
     os.system(cmd)
-    return True
+    return content
 
 
 def download_file(config, content):
@@ -62,4 +60,4 @@ def download_file(config, content):
     o.write(f.read())
     o.close()
     f.close()
-    return True
+    return content

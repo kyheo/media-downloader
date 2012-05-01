@@ -42,6 +42,6 @@ with **-h** parameter.
     $ bin/media_downloader
 
 
-.. [#] I know, I know, subtitles are not media files.
-.. [#] This make the project name even worst, right ?
+.. [1] I know, I know, subtitles are not media files.
+.. [2] This make the project name even worst, right ?
 

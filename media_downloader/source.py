@@ -2,9 +2,11 @@ import urllib2
 import re
 import feedparser
 import logging
+import mimetypes
 
+from media_downloader import utils
 
-def create_content(type_, name, link, extra=None):
+def create_content(type_, name, link, extra={}):
     '''Create content dictionary'''
     return {'type': type_,
             'name': name,
@@ -26,10 +28,8 @@ def argenteam(config):
     Returned Types: argenteam-magnet and argenteam-torrent
 
     Configuration:
-    {'name': 'Argenteam',
-     'url': 'http://www.argenteam.net/rss/tvseries_torrents.xml',
-     'filters': ['House\.', 'BigBangTheory', 'HowIMetYourMother']
-    }
+    * url : 'http://www.argenteam.net/rss/tvseries_torrents.xml'
+    * filters : Keys to match. For example: ['House\.', 'BigBangTheory', 'HowIMetYourMother']
     '''
     filtered = []
     raw_content = feedparser.parse(urllib2.urlopen(config['url']).read())
@@ -51,4 +51,23 @@ def argenteam(config):
                         entry['link'])
                     filtered.append(tmp_content)
                     break
+    return filtered
+
+
+def video_files(config):
+    '''Look for video files in a defined directory
+    Returned Type: Configured
+
+    Configuration:
+    * directory : Path where the files are.
+    * type : Return type.
+    '''
+    filtered = []
+    supported_formats = 'video/x-msvideo', 'video/quicktime', \
+        'video/x-matroska', 'video/mp4'
+    mimetypes.add_type('video/x-matroska', '.mkv')
+    for file_ in utils.recursive_search(config['directory']):
+        mimetype = mimetypes.guess_type(file_)[0]
+        if mimetype in supported_formats:
+            filtered.append(create_content(config['type'], file_, file_))
     return filtered

@@ -13,6 +13,11 @@ SOURCES = [{'name': 'Argenteam',
             'handler': source.argenteam,
             'url': 'http://www.argenteam.net/rss/tvseries_torrents.xml',
             'filters': ['House\.', 'BigBangTheory', 'HowIMetYourMother']
+           },
+           {'name': 'Video Files',
+            'handler': source.video_files,
+            'directory': '/Users/kyheo/dev/tmp/',
+            'type': 'periscope-video'
            }
         ]
 
@@ -43,4 +48,13 @@ HANDLERS = {
             },
             store_link,
         ],
+    'periscope-video': [
+            {'name': 'Periscope - Subtitles', 
+             'handler': handler.subtitles_periscope,
+             'cache_folder': 'blablabla',
+             'langs': ['es'],
+            }
+            #move to another dir,
+            #notify,
+        ]
     }

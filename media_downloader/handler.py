@@ -3,20 +3,17 @@ import logging
 import urllib2
 import sqlite3
 
+import mimetypes
+import periscope
+
+from media_downloader import utils
+
 _DB = sqlite3.connect('.database')
 
 def handle(configs, content):
     '''Handle content properly'''
     for config in configs[content['type']]:
         content = config['handler'](config, content)
-
-
-def _format_parameters(content, fields):
-    '''Format parameters accordingly'''
-    kwargs = {}
-    for field in fields:
-        kwargs[field] = content.get(field, 'undefined')
-    return kwargs
 
 
 def avoid_duplicated(config, content):
@@ -43,7 +40,7 @@ def store_link(config, content):
 
 def system_command(config, content):
     '''Executes command and send the parameters as configured'''
-    kwargs = _format_parameters(content, config['fields'])
+    kwargs = utils.format_parameters(content, config['fields'])
     cmd = config['command'].format(**kwargs)
     logging.info('Running %s', cmd)
     os.system(cmd)
@@ -53,11 +50,25 @@ def system_command(config, content):
 def download_file(config, content):
     '''Downloads a link as specified'''
     logging.info('Downloading %s', content['name'])
-    kwargs = _format_parameters(content, config['dst_fields'])
+    kwargs = utils.format_parameters(content, config['dst_fields'])
     dst_file = config['dst_file'].format(**kwargs)
     f = urllib2.urlopen(content['link'])
     o = open(dst_file,'wb')
     o.write(f.read())
     o.close()
     f.close()
+    return content
+
+
+def subtitles_periscope(config, content):
+    '''Download subtitles using periscope. 
+    
+    Sections of periscope bin script are replicated in here.
+    Content list has the files that require subtitles.
+    '''
+    periscope_client = periscope.Periscope(config['cache_folder'])
+    for video in content:
+        sub = periscope_client.downloadSubtitle(video, config['langs'])
+        if sub:
+            video['extra']['subtitle'] = True
     return content

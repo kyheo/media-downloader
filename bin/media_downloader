@@ -44,7 +44,7 @@ def run():
             try:
                 handler.handle(config.HANDLERS, content)
             except Exception, e:
-                logging.error(e)
+                logging.exception(e)
     except Exception, e:
         logging.exception(e)
         return

@@ -39,7 +39,15 @@ def store_link(config, content):
 
 
 def system_command(config, content):
-    '''Executes command and send the parameters as configured'''
+    '''Executes command and send the parameters as configured
+    
+    Configuration
+    * command : Command to run. Content fields should be added as said in here:
+                http://docs.python.org/library/stdtypes.html#str.format
+                Ex: /path/to/command {link}
+    * fields: Fields that should be extracted from content to be used as
+              command params.
+    '''
     kwargs = utils.format_parameters(content, config['fields'])
     cmd = config['command'].format(**kwargs)
     logging.info('Running %s', cmd)
@@ -48,7 +56,16 @@ def system_command(config, content):
 
 
 def download_file(config, content):
-    '''Downloads a link as specified'''
+    '''Downloads a link as specified
+    
+    Configuration
+    * dst_file: Destination file. Content fields should be adeda as said in
+                here: http://docs.python.org/library/stdtypes.html#str.format
+                Ex: /path/to/new_{link}_destination
+    * dst_fields: Fields that should be extracted from content to be used as
+                  command params.
+    
+    '''
     logging.info('Downloading %s', content['name'])
     kwargs = utils.format_parameters(content, config['dst_fields'])
     dst_file = config['dst_file'].format(**kwargs)
@@ -65,6 +82,10 @@ def subtitles_periscope(config, content):
     
     Sections of periscope bin script are replicated in here.
     Content list has the files that require subtitles.
+
+    Configuration:
+    * cache_folder: Path to periscope cache folder.
+    * langs: List of languages for the subtitles.
     '''
     periscope_client = periscope.Periscope(config['cache_folder'])
     sub = periscope_client.downloadSubtitle(content['link'], config['langs'])

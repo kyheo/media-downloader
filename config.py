@@ -51,7 +51,7 @@ HANDLERS = {
     'periscope-video': [
             {'name': 'Periscope - Subtitles', 
              'handler': handler.subtitles_periscope,
-             'cache_folder': 'blablabla',
+             'cache_folder': '.cache',
              'langs': ['es'],
             }
             #move to another dir,

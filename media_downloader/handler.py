@@ -67,8 +67,8 @@ def subtitles_periscope(config, content):
     Content list has the files that require subtitles.
     '''
     periscope_client = periscope.Periscope(config['cache_folder'])
-    for video in content:
-        sub = periscope_client.downloadSubtitle(video, config['langs'])
-        if sub:
-            video['extra']['subtitle'] = True
+    sub = periscope_client.downloadSubtitle(content['link'], config['langs'])
+    if sub:
+        content['subtitle'] = True
+        content['subtitle_path'] = sub['subtitlepath']
     return content

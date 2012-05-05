@@ -2,6 +2,7 @@ import os
 import logging
 import urllib2
 import sqlite3
+import shutil
 
 import mimetypes
 import periscope
@@ -93,3 +94,16 @@ def subtitles_periscope(config, content):
         content['subtitle'] = True
         content['subtitle_path'] = sub['subtitlepath']
     return content
+
+
+def move_files(config, content):
+    '''Moves the paths configured into the destination folder.
+    
+    Configuration:
+    * dst_folder: Destination folder for the file/s
+    * fields: Fields of content that have source files that should be moved.
+    '''
+    logging.info('Moving %s files to %s.', content['name'], config['dst_folder'])
+    for source_field in config['fields']:
+        if source_field in content:
+            shutil.move(content[source_field], config['dst_folder'])

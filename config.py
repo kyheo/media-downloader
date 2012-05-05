@@ -53,8 +53,12 @@ HANDLERS = {
              'handler': handler.subtitles_periscope,
              'cache_folder': '.cache',
              'langs': ['es'],
-            }
-            #move to another dir,
+            },
+            {'name': 'Periscope - Move files',
+             'handler': handler.move_files,
+             'dst_folder': '/tmp/',
+             'fields': ['link', 'subtitle_path']
+             }
             #notify,
         ]
     }

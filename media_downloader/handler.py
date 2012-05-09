@@ -110,6 +110,7 @@ def move_files(config, content):
     for source_field in config['fields']:
         if source_field in content:
             shutil.move(content[source_field], config['dst_folder'])
+    return content
 
 
 def send_email(config, content):
@@ -144,3 +145,4 @@ def send_email(config, content):
         server.sendmail(config['email']['from'], config['destination'],
                         msg.as_string())
         server.quit()
+    return content

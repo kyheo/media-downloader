@@ -124,25 +124,26 @@ def send_email(config, content):
     * body_fields: Fields to use in body
     '''
     logging.info('Sending notification email')
-    subject = config['subject']
-    if config['subject_fields']:
-        kwargs = utils.format_parameters(content, config['subject_fields'])
-        subject = subject.format(**kwargs)
-    body = config['body']
-    if config['body_fields']:
-        kwargs = utils.format_parameters(content, config['body_fields'])
-        body = body.format(**kwargs)
+    if 'subtitle' in content and content['subtitle']:
+        subject = config['subject']
+        if config['subject_fields']:
+            kwargs = utils.format_parameters(content, config['subject_fields'])
+            subject = subject.format(**kwargs)
+        body = config['body']
+        if config['body_fields']:
+            kwargs = utils.format_parameters(content, config['body_fields'])
+            body = body.format(**kwargs)
 
-        msg = MIMEText(body)  
-        msg['Subject'] = subject     
-        msg['From'] = config['email']['from']
-        msg['To'] = ', '.join(config['destination'])
-        server = smtplib.SMTP(config['email']['smtp_server'],
-                              config['email']['smtp_port'])
-        if config['email']['use_tls']:
-            server.starttls()
-        server.login(config['email']['smtp_user'], config['email']['smtp_pass'])
-        server.sendmail(config['email']['from'], config['destination'],
-                        msg.as_string())
-        server.quit()
+            msg = MIMEText(body)  
+            msg['Subject'] = subject     
+            msg['From'] = config['email']['from']
+            msg['To'] = ', '.join(config['destination'])
+            server = smtplib.SMTP(config['email']['smtp_server'],
+                                  config['email']['smtp_port'])
+            if config['email']['use_tls']:
+                server.starttls()
+            server.login(config['email']['smtp_user'], config['email']['smtp_pass'])
+            server.sendmail(config['email']['from'], config['destination'],
+                            msg.as_string())
+            server.quit()
     return content

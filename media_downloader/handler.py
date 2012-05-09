@@ -4,7 +4,9 @@ import urllib2
 import sqlite3
 import shutil
 
-import mimetypes
+import smtplib
+from email.mime.text import MIMEText
+
 import periscope
 
 from media_downloader import utils
@@ -88,6 +90,7 @@ def subtitles_periscope(config, content):
     * cache_folder: Path to periscope cache folder.
     * langs: List of languages for the subtitles.
     '''
+    logging.info('Downloading subtitles with Periscope')
     periscope_client = periscope.Periscope(config['cache_folder'])
     sub = periscope_client.downloadSubtitle(content['link'], config['langs'])
     if sub:
@@ -107,3 +110,37 @@ def move_files(config, content):
     for source_field in config['fields']:
         if source_field in content:
             shutil.move(content[source_field], config['dst_folder'])
+
+
+def send_email(config, content):
+    '''Sends an email with the information configured
+    
+    Configuration:
+    * email: Dictionary with email informacion
+    * subject: Email subject
+    * subject_fields: Fields to use in subject
+    * body: Email body
+    * body_fields: Fields to use in body
+    '''
+    logging.info('Sending notification email')
+    subject = config['subject']
+    if config['subject_fields']:
+        kwargs = utils.format_parameters(content, config['subject_fields'])
+        subject = subject.format(**kwargs)
+    body = config['body']
+    if config['body_fields']:
+        kwargs = utils.format_parameters(content, config['body_fields'])
+        body = body.format(**kwargs)
+
+        msg = MIMEText(body)  
+        msg['Subject'] = subject     
+        msg['From'] = config['email']['from']
+        msg['To'] = ', '.join(config['destination'])
+        server = smtplib.SMTP(config['email']['smtp_server'],
+                              config['email']['smtp_port'])
+        if config['email']['use_tls']:
+            server.starttls()
+        server.login(config['email']['smtp_user'], config['email']['smtp_pass'])
+        server.sendmail(config['email']['from'], config['destination'],
+                        msg.as_string())
+        server.quit()

@@ -28,6 +28,14 @@ avoid_duplicated = {'name': 'Avoid Duplicated downloads',
 store_link = {'name': 'Store link',
               'handler': handler.store_link}
 
+email_config = {'from': 'user@gmail.com', 
+                'smtp_server': 'smtp.gmail.com',
+                'smtp_user': 'user@gmail.com',
+                'smtp_port': 587,
+                'smtp_pass': 'password',
+                'use_tls': True
+               }
+
 # MAIN HANDLERS CONFIG
 HANDLERS = {
     'argenteam-magnet': [
@@ -58,7 +66,15 @@ HANDLERS = {
              'handler': handler.move_files,
              'dst_folder': '/tmp/',
              'fields': ['link', 'subtitle_path']
-             }
-            #notify,
+             },
+            {'name': 'Periscope - Notify',
+             'handler': handler.send_email,
+             'email': email_config,
+             'destination': ['destination email'],
+             'subject': 'New subtitle download',
+             'subject_fields': [],
+             'body': '{name} got downloaded.',
+             'body_fields': ['name']
+             },
         ]
     }

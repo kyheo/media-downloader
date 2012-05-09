@@ -7,6 +7,8 @@ from media_downloader import handler
 LOGGING = {'level': logging.DEBUG,
            'format': '%(asctime)s - %(levelname)8s - %(filename)s:%(lineno)s - %(message)s',
            'datefmt': '%Y-%m-%d %H:%M:%S', 
+           #'filename': '/path/to/filename',
+           #'filemode': 'a',
         }
 
 SOURCES = [{'name': 'Argenteam',
@@ -36,6 +38,16 @@ email_config = {'from': 'user@gmail.com',
                 'use_tls': True
                }
 
+argenteam_email = {'name': 'Argenteam - Notify',
+             'handler': handler.send_email,
+             'email': email_config,
+             'destination': ['email'],
+             'subject': 'New Movie / Serie download',
+             'subject_fields': [],
+             'body': '{name} got downloaded.',
+             'body_fields': ['name']
+             }
+
 # MAIN HANDLERS CONFIG
 HANDLERS = {
     'argenteam-magnet': [
@@ -46,6 +58,7 @@ HANDLERS = {
              'fields': ['link'],
             },
             store_link,
+            argenteam_email,
         ],
     'argenteam-torrent': [
             avoid_duplicated,
@@ -55,6 +68,7 @@ HANDLERS = {
              'dst_fields': ['name'],
             },
             store_link,
+            argenteam_email,
         ],
     'periscope-video': [
             {'name': 'Periscope - Subtitles', 

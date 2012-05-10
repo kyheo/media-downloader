@@ -90,12 +90,14 @@ def subtitles_periscope(config, content):
     * cache_folder: Path to periscope cache folder.
     * langs: List of languages for the subtitles.
     '''
-    logging.info('Downloading subtitles with Periscope')
+    logging.info('Downloading subtitles with Periscope for %s', content['link'])
     periscope_client = periscope.Periscope(config['cache_folder'])
     sub = periscope_client.downloadSubtitle(content['link'], config['langs'])
     if sub:
         content['subtitle'] = True
         content['subtitle_path'] = sub['subtitlepath']
+    else:
+        raise Exception('No subtitle found')
     return content
 
 
